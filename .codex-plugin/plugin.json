@@ -1,0 +1,40 @@
+{
+  "name": "codex-token-saver",
+  "version": "0.1.0",
+  "description": "Translate prompts in any language into English before Codex CLI runs, then translate final answers back.",
+  "author": {
+    "name": "Codex Token Saver Contributors"
+  },
+  "homepage": "https://github.com/lyymuwu/codex-token-saver",
+  "repository": "https://github.com/lyymuwu/codex-token-saver",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "cli",
+    "translation",
+    "token-saving",
+    "multilingual"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Codex Token Saver",
+    "shortDescription": "Translate multilingual prompts to reduce Codex token use",
+    "longDescription": "A safe Codex CLI wrapper that translates prompts in any natural language to English using a cheap model, runs Codex unchanged, and translates final answers back.",
+    "developerName": "Codex Token Saver Contributors",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read"
+    ],
+    "websiteURL": "https://github.com/lyymuwu/codex-token-saver",
+    "privacyPolicyURL": "https://github.com/lyymuwu/codex-token-saver#privacy-and-safety",
+    "termsOfServiceURL": "https://github.com/lyymuwu/codex-token-saver#license",
+    "defaultPrompt": [
+      "Run Codex with translated multilingual prompts",
+      "Estimate token savings for a multilingual prompt",
+      "Check whether Token Saver is configured"
+    ],
+    "brandColor": "#0F766E",
+    "screenshots": []
+  }
+}

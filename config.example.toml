@@ -1,0 +1,16 @@
+enabled = true
+provider = "codex_cli"
+model = "gpt-5-nano"
+codex_model = "gpt-5.4-mini"
+base_url = "https://api.openai.com/v1"
+api_key_env = "OPENAI_API_KEY"
+source_language = "auto"
+target_language = "English"
+min_non_english_ratio = 0.25
+mode = "auto"
+detect_latin_languages = true
+translate_final_only = true
+fallback_on_error = "passthrough"
+show_savings_report = true
+timeout_seconds = 45
+debug_save_text = false

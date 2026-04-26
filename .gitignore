@@ -1,0 +1,16 @@
+.pytest_cache/
+__pycache__/
+*.pyc
+.coverage
+coverage.xml
+dist/
+build/
+*.egg-info/
+.env
+.env.*
+config.toml
+logs/
+*.log
+tmp/
+install-manifest.json
+.DS_Store

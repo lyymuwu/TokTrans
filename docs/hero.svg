@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 360" role="img" aria-labelledby="title desc">
+  <title id="title">Codex Token Saver workflow</title>
+  <desc id="desc">A pixel-style diagram showing multilingual prompts translated to English before Codex and final answers translated back.</desc>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+      <polygon points="0 0, 10 4, 0 8" fill="#2F80ED"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+      <polygon points="0 0, 10 4, 0 8" fill="#1B7F5A"/>
+    </marker>
+    <filter id="soft-shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#1f2937" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <rect width="920" height="360" fill="#F7FAFC" rx="18"/>
+  <rect x="24" y="22" width="872" height="316" fill="#FFFFFF" stroke="#D7E0EA" stroke-width="2" rx="14" filter="url(#soft-shadow)"/>
+
+  <text x="460" y="58" text-anchor="middle" font-family="monospace" font-size="26" font-weight="700" fill="#102033">Codex Token Saver</text>
+  <text x="460" y="85" text-anchor="middle" font-family="monospace" font-size="14" fill="#526071">Any language in. English for Codex. Same language out.</text>
+
+  <g transform="translate(70 128)">
+    <rect x="0" y="0" width="210" height="92" fill="#EAF3FF" stroke="#2F80ED" stroke-width="2" rx="10"/>
+    <text x="105" y="28" text-anchor="middle" font-family="monospace" font-size="15" font-weight="700" fill="#173E75">User prompt</text>
+    <text x="105" y="54" text-anchor="middle" font-family="monospace" font-size="14" fill="#173E75">中文 / Espanol</text>
+    <text x="105" y="76" text-anchor="middle" font-family="monospace" font-size="14" fill="#173E75">日本語 / हिन्दी</text>
+  </g>
+
+  <line x1="292" y1="174" x2="382" y2="174" stroke="#2F80ED" stroke-width="4" marker-end="url(#arrow-blue)"/>
+  <text x="337" y="158" text-anchor="middle" font-family="monospace" font-size="12" fill="#2F80ED">cheap model</text>
+
+  <g transform="translate(394 118)">
+    <rect x="0" y="0" width="132" height="112" fill="#FFF7E8" stroke="#D98B24" stroke-width="2" rx="10"/>
+    <rect x="35" y="22" width="63" height="49" fill="#263238" rx="4"/>
+    <rect x="42" y="29" width="49" height="7" fill="#70E1A1"/>
+    <rect x="42" y="43" width="38" height="7" fill="#8BD4FF"/>
+    <rect x="42" y="57" width="46" height="7" fill="#FFC857"/>
+    <text x="66" y="95" text-anchor="middle" font-family="monospace" font-size="15" font-weight="700" fill="#6D420A">English</text>
+  </g>
+
+  <line x1="542" y1="174" x2="632" y2="174" stroke="#1B7F5A" stroke-width="4" marker-end="url(#arrow-green)"/>
+  <text x="587" y="158" text-anchor="middle" font-family="monospace" font-size="12" fill="#1B7F5A">real codex</text>
+
+  <g transform="translate(646 128)">
+    <rect x="0" y="0" width="210" height="92" fill="#EAFBF3" stroke="#1B7F5A" stroke-width="2" rx="10"/>
+    <text x="105" y="28" text-anchor="middle" font-family="monospace" font-size="15" font-weight="700" fill="#14563F">Final answer</text>
+    <text x="105" y="54" text-anchor="middle" font-family="monospace" font-size="14" fill="#14563F">same language</text>
+    <text x="105" y="76" text-anchor="middle" font-family="monospace" font-size="14" fill="#14563F">code unchanged</text>
+  </g>
+
+  <g transform="translate(112 256)">
+    <rect x="0" y="0" width="696" height="44" fill="#F2F5F8" stroke="#D7E0EA" stroke-width="1.5" rx="8"/>
+    <text x="348" y="28" text-anchor="middle" font-family="monospace" font-size="14" fill="#334155">Safe wrapper: no Codex patching, no binary replacement, install and uninstall by manifest.</text>
+  </g>
+</svg>
