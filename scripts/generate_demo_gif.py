@@ -161,7 +161,7 @@ def write_gif(frames: list[bytearray]) -> None:
     data.extend(b"!\xFF\x0BNETSCAPE2.0\x03\x01\x00\x00\x00")
     for img in frames:
         data.extend(b"!\xF9\x04\x04")
-        data.extend((70).to_bytes(2, "little"))
+        data.extend((130).to_bytes(2, "little"))
         data.extend(b"\x00\x00")
         data.extend(b",\x00\x00\x00\x00")
         data.extend(W.to_bytes(2, "little"))

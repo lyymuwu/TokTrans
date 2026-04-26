@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(unset CDPATH; cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 PLUGIN_HOME="${CODEX_TOKEN_SAVER_HOME:-$HOME/.codex-token-saver}"
 BIN_DIR="${CODEX_TOKEN_SAVER_BIN_DIR:-$HOME/.local/bin}"
 SHIM="$BIN_DIR/codex-ts"
@@ -91,6 +91,7 @@ if [ "$INSTALL_PATH" -eq 1 ] || [ "$INSTALL_ALIAS" -eq 1 ]; then
     {
       printf '\n%s\n' "$begin"
       if [ "$INSTALL_PATH" -eq 1 ]; then
+        # shellcheck disable=SC2016
         printf 'export PATH=%q:"$PATH"\n' "$BIN_DIR"
       fi
       if [ "$INSTALL_ALIAS" -eq 1 ]; then
