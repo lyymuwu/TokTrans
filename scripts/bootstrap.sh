@@ -51,6 +51,7 @@ cat <<'NEXT'
 Next:
   source ~/.zshrc
   codex-ts doctor
+  $token-trans <your non-English task>
 
 Security note:
   For maximum safety, clone the repository first and inspect scripts/install.sh before running it.

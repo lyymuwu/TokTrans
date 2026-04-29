@@ -1,0 +1,4 @@
+interface:
+  display_name: "Token Trans"
+  short_description: "Cheap subagent translation adapter"
+  default_prompt: "Use $token-trans for this non-English task."

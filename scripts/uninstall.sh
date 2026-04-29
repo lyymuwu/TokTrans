@@ -50,12 +50,17 @@ data = json.loads(manifest.read_text(encoding="utf-8"))
 if data.get("tool") != "codex-token-saver":
     raise SystemExit("Manifest is not for codex-token-saver")
 
+skill_targets = [Path(p).expanduser().resolve() for p in data.get("codex_skill_targets", [])]
+
 def allowed(path: Path) -> bool:
     path = path.expanduser().resolve()
     if home in path.parents or path == home:
         return True
     if path.name == "codex-ts" and ".local" in path.parts:
         return True
+    for target in skill_targets:
+        if path == target or target in path.parents:
+            return True
     return False
 
 def remove_path(raw: str) -> None:
@@ -77,6 +82,18 @@ def remove_path(raw: str) -> None:
 
 for raw in data.get("managed_paths", []):
     remove_path(raw)
+
+for target in skill_targets:
+    for path in (target / "agents", target):
+        if path.exists() and path.is_dir():
+            try:
+                next(path.iterdir())
+            except StopIteration:
+                print(f"rmdir: {path}")
+                if not dry_run:
+                    path.rmdir()
+            except OSError:
+                pass
 
 rc = data.get("shell_rc_file")
 if rc and data.get("managed_rc_block"):
@@ -106,5 +123,7 @@ if purge:
         if not dry_run:
             shutil.rmtree(home)
 else:
-    print(f"preserve: {home}/config.toml and logs")
+    preserved = data.get("user_preserved_paths", [])
+    if preserved:
+        print("preserve: " + ", ".join(preserved))
 PY

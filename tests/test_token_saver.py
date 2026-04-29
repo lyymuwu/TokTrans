@@ -224,23 +224,29 @@ class InstallerTests(unittest.TestCase):
             env = {
                 "CODEX_TOKEN_SAVER_HOME": str(home),
                 "CODEX_TOKEN_SAVER_BIN_DIR": str(bindir),
+                "CODEX_HOME": str(Path(d) / "codex-home"),
                 "SHELL_RC_FILE": str(rcfile),
             }
+            skill = Path(env["CODEX_HOME"]) / "skills" / "token-trans"
             first = self.run_script("install.sh", env=env)
             self.assertEqual(first.returncode, 0, first.stderr)
             second = self.run_script("install.sh", env=env)
             self.assertEqual(second.returncode, 0, second.stderr)
             self.assertTrue((bindir / "codex-ts").is_symlink())
+            self.assertTrue((skill / "SKILL.md").exists())
+            self.assertTrue((skill / "agents" / "openai.yaml").exists())
             rc_text = rcfile.read_text(encoding="utf-8")
             self.assertIn("codex-token-saver managed block", rc_text)
             self.assertIn(str(bindir), rc_text)
             dry = self.run_script("uninstall.sh", "--dry-run", env=env)
             self.assertEqual(dry.returncode, 0, dry.stderr)
             self.assertTrue((bindir / "codex-ts").exists())
+            self.assertTrue((skill / "SKILL.md").exists())
             self.assertIn("codex-token-saver managed block", rcfile.read_text(encoding="utf-8"))
             uninstall = self.run_script("uninstall.sh", env=env)
             self.assertEqual(uninstall.returncode, 0, uninstall.stderr)
             self.assertFalse((bindir / "codex-ts").exists())
+            self.assertFalse((skill / "SKILL.md").exists())
             self.assertTrue((home / "config.toml").exists())
             self.assertNotIn("codex-token-saver managed block", rcfile.read_text(encoding="utf-8"))
 
@@ -259,6 +265,48 @@ class InstallerTests(unittest.TestCase):
             result = self.run_script("install.sh", env=env)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("Refusing to overwrite unmanaged file", result.stderr)
+
+    def test_install_no_skill(self):
+        with tempfile.TemporaryDirectory() as d:
+            env = {
+                "CODEX_TOKEN_SAVER_HOME": str(Path(d) / "home"),
+                "CODEX_TOKEN_SAVER_BIN_DIR": str(Path(d) / "bin"),
+                "CODEX_HOME": str(Path(d) / "codex-home"),
+                "SHELL_RC_FILE": str(Path(d) / ".zshrc"),
+            }
+            result = self.run_script("install.sh", "--no-skill", env=env)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            skill = Path(env["CODEX_HOME"]) / "skills" / "token-trans"
+            self.assertFalse((skill / "SKILL.md").exists())
+            manifest = Path(env["CODEX_TOKEN_SAVER_HOME"]) / "install-manifest.json"
+            data = json.loads(manifest.read_text(encoding="utf-8"))
+            self.assertEqual(data["codex_skill_targets"], [])
+
+    def test_install_skill_only(self):
+        with tempfile.TemporaryDirectory() as d:
+            env = {
+                "CODEX_TOKEN_SAVER_HOME": str(Path(d) / "home"),
+                "CODEX_TOKEN_SAVER_BIN_DIR": str(Path(d) / "bin"),
+                "CODEX_HOME": str(Path(d) / "codex-home"),
+                "SHELL_RC_FILE": str(Path(d) / ".zshrc"),
+            }
+            result = self.run_script("install.sh", "--skill-only", env=env)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            skill = Path(env["CODEX_HOME"]) / "skills" / "token-trans"
+            self.assertTrue((skill / "SKILL.md").exists())
+            self.assertFalse((Path(env["CODEX_TOKEN_SAVER_BIN_DIR"]) / "codex-ts").exists())
+            self.assertFalse((Path(env["CODEX_TOKEN_SAVER_HOME"]) / "config.toml").exists())
+            merged = os.environ.copy()
+            merged.update(env)
+            doctor = subprocess.run(
+                ["bash", str(Path(env["CODEX_TOKEN_SAVER_HOME"]) / "scripts" / "doctor.sh")],
+                text=True,
+                capture_output=True,
+                env=merged,
+            )
+            self.assertEqual(doctor.returncode, 0, doctor.stderr)
+            self.assertIn("Wrapper: not installed", doctor.stdout)
+            self.assertIn("Token Trans skill: installed", doctor.stdout)
 
 
 if __name__ == "__main__":
