@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PLUGIN_HOME="${CODEX_TOKEN_SAVER_HOME:-$HOME/.codex-token-saver}"
+PLUGIN_HOME="${TOKTRANS_HOME:-${CODEX_TOKEN_SAVER_HOME:-$HOME/.toktrans}}"
 MANIFEST="$PLUGIN_HOME/install-manifest.json"
 DRY_RUN=0
 PURGE=0
@@ -47,8 +47,8 @@ purge = sys.argv[4] == "1"
 yes = sys.argv[5] == "1"
 
 data = json.loads(manifest.read_text(encoding="utf-8"))
-if data.get("tool") != "codex-token-saver":
-    raise SystemExit("Manifest is not for codex-token-saver")
+if data.get("tool") not in {"toktrans", "codex-token-saver"}:
+    raise SystemExit("Manifest is not for TokTrans")
 
 skill_targets = [Path(p).expanduser().resolve() for p in data.get("codex_skill_targets", [])]
 
@@ -98,17 +98,22 @@ for target in skill_targets:
 rc = data.get("shell_rc_file")
 if rc and data.get("managed_rc_block"):
     rc_path = Path(rc).expanduser()
-    begin = "# >>> codex-token-saver managed block >>>"
-    end = "# <<< codex-token-saver managed block <<<"
+    markers = [
+        ("# >>> toktrans managed block >>>", "# <<< toktrans managed block <<<"),
+        ("# >>> codex-token-saver managed block >>>", "# <<< codex-token-saver managed block <<<"),
+    ]
     if rc_path.exists():
         text = rc_path.read_text(encoding="utf-8")
-        start = text.find(begin)
-        finish = text.find(end)
-        if start != -1 and finish != -1 and finish > start:
-            finish += len(end)
-            print(f"remove managed rc block: {rc_path}")
-            if not dry_run:
-                rc_path.write_text(text[:start].rstrip() + "\n" + text[finish:].lstrip(), encoding="utf-8")
+        for begin, end in markers:
+            start = text.find(begin)
+            finish = text.find(end)
+            if start != -1 and finish != -1 and finish > start:
+                finish += len(end)
+                print(f"remove managed rc block: {rc_path}")
+                if not dry_run:
+                    text = text[:start].rstrip() + "\n" + text[finish:].lstrip()
+                    rc_path.write_text(text, encoding="utf-8")
+                break
 
 if manifest.exists():
     print(f"remove: {manifest}")

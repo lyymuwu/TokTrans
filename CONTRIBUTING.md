@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping make Codex Token Saver better.
+Thanks for helping make TokTrans better.
 
 ## Local Checks
 
@@ -21,4 +21,4 @@ shellcheck scripts/*.sh scripts/codex-ts
 
 - Improve language detection samples.
 - Add fake-Codex integration tests for more CLI argument combinations.
-- Document real-world token savings for different language pairs.
+- Document real-world translation behavior for different language pairs.

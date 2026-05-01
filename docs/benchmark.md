@@ -1,29 +1,29 @@
-# Token Saving Benchmark
+# Translation Benchmark
 
-This page measures visible prompt-token estimates for non-English Codex prompts before and after translation to English.
+This page records visible prompt-token estimates for multilingual Codex prompts before and after translation.
 
-The numbers are intentionally conservative and reproducible: they use the same rough estimator as `codex-ts`. They are not exact billing numbers, and they do not include hidden reasoning tokens. Treat them as a visible-prompt benchmark, not an invoice.
+The numbers are intentionally conservative and reproducible: they use the same rough estimator as `codex-ts`. They are not exact billing numbers, and they do not include hidden reasoning tokens. Treat them as translation diagnostics, not product claims.
 
 ## Medium Coding Task
 
 Task: inspect why repository tests fail and modify only the necessary files.
 
-| Language | Task | Original visible tokens | English visible tokens | Estimated saving |
+| Language | Task | Original visible tokens | Translated visible tokens | Delta |
 |---|---|---:|---:|---:|
-| Chinese | medium | 35 | 24 | 31.4% |
-| Japanese | medium | 49 | 24 | 51.0% |
-| Korean | medium | 41 | 24 | 41.5% |
-| Thai | medium | 89 | 24 | 73.0% |
-| Hindi | medium | 93 | 24 | 74.2% |
-| Arabic | medium | 70 | 24 | 65.7% |
-| Spanish | medium | 26 | 24 | 7.7% |
-| French | medium | 26 | 24 | 7.7% |
+| Chinese | medium | 35 | 24 | -11 |
+| Japanese | medium | 49 | 24 | -25 |
+| Korean | medium | 41 | 24 | -17 |
+| Thai | medium | 89 | 24 | -65 |
+| Hindi | medium | 93 | 24 | -69 |
+| Arabic | medium | 70 | 24 | -46 |
+| Spanish | medium | 26 | 24 | -2 |
+| French | medium | 26 | 24 | -2 |
 
 ## What This Means
 
-The biggest visible-token wins appear for scripts that are expensive under many LLM tokenizers: Thai, Hindi, Arabic, Japanese, Korean, and Chinese. Latin-script languages often save less, but `codex-ts` still keeps the final-answer language experience consistent.
+Different languages and scripts can produce different visible token counts after translation. TokTrans reports those estimates as debugging context for wrapper runs, but the repository's main purpose is the translation boundary itself.
 
-This benchmark is useful because Codex Token Saver optimizes the prompt that the main Codex run sees. It cannot inspect or reduce hidden reasoning tokens after the main model starts working.
+This benchmark is useful for checking how TokTrans rewrites the prompt that the main Codex run sees. It cannot inspect hidden reasoning tokens after the main model starts working.
 
 ## Reproduce
 
@@ -48,5 +48,4 @@ codex-ts: estimated prompt tokens 35 -> 24 (-11); language=Chinese; elapsed=...
 
 - Add long-task prompts with refactor, tests, and explanation requests.
 - Add tokenizer-specific measurements for OpenAI-compatible tokenizers.
-- Add real-world cost comparisons when Codex exposes stable usage accounting.
-- Add benchmark snapshots for releases.
+- Add translation-quality snapshots for releases.

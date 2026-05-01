@@ -69,13 +69,13 @@ PROMPTS = [
 
 
 def main() -> int:
-    print("| Language | Task | Original visible tokens | English visible tokens | Estimated saving |")
+    print("| Language | Task | Original visible tokens | Translated visible tokens | Delta |")
     print("|---|---|---:|---:|---:|")
     for language, task, original, english in PROMPTS:
         before = rough_token_estimate(original)
         after = rough_token_estimate(english)
-        saving = (before - after) / before * 100
-        print(f"| {language} | {task} | {before} | {after} | {saving:.1f}% |")
+        delta = after - before
+        print(f"| {language} | {task} | {before} | {after} | {delta:+d} |")
     return 0
 
 

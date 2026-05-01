@@ -95,7 +95,7 @@ def frame(step: int) -> bytearray:
     rect(img, 45, 37, 8, 8, 6)
     rect(img, 61, 37, 8, 8, 5)
     rect(img, 77, 37, 8, 8, 3)
-    text(img, 48, 72, "CODEX-TOKEN-SAVER DEMO", 4, 2)
+    text(img, 48, 72, "TOKTRANS DEMO", 4, 2)
     text(img, 48, 112, "$ CODEX-TS EXEC CHINESE PROMPT", 2, 2)
     if step >= 1:
         text(img, 70, 148, "DETECT: CHINESE", 5, 2)

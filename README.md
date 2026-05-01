@@ -1,24 +1,26 @@
-# Codex Token Saver
+# TokTrans
 
-[![CI](https://github.com/lyymuwu/codex-token-saver/actions/workflows/ci.yml/badge.svg)](https://github.com/lyymuwu/codex-token-saver/actions/workflows/ci.yml)
+[![CI](https://github.com/lyymuwu/TokTrans/actions/workflows/ci.yml/badge.svg)](https://github.com/lyymuwu/TokTrans/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Codex CLI](https://img.shields.io/badge/Codex-CLI-111827)](https://github.com/openai/codex)
 
-**Think in English. Work in any language. Spend the strongest model where it matters.**
+**Translate the tokens around Codex without changing how Codex itself is installed.**
 
-Codex Token Saver gives you two ways to run non-English Codex work through an English reasoning path:
+TokTrans provides a small translation layer for Codex workflows. It is not a replacement for Codex and it does not patch the official `codex` binary; it only translates the user-facing text that enters or leaves a Codex run when you explicitly opt in.
+
+TokTrans currently ships two entry points:
 
 - `$token-trans`: the recommended Codex skill for in-app agent workflows.
 - `codex-ts`: a safe Codex CLI wrapper for terminal automation and `codex exec`.
 
-Both follow the same principle: translate the user request to English with a cheaper model, let the main agent work in English, then translate only the final answer back.
+Both follow the same principle: translate the request before Codex receives it, then translate only the final answer back for the user. The purpose of this repository is token translation, not a promise of token savings.
 
-![Codex Token Saver workflow](docs/hero.svg)
+![TokTrans workflow](docs/hero.svg)
 
 ## Recommended Install: Skill First
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lyymuwu/codex-token-saver/main/scripts/bootstrap.sh | bash -s -- --skill-only
+curl -fsSL https://raw.githubusercontent.com/lyymuwu/TokTrans/main/scripts/bootstrap.sh | bash -s -- --skill-only
 ```
 
 This installs only the native Codex skill:
@@ -40,7 +42,7 @@ The skill path is recommended because it is explicit, lightweight, and does not 
 Use this if you also want the terminal wrapper command `codex-ts`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lyymuwu/codex-token-saver/main/scripts/bootstrap.sh | bash
+curl -fsSL https://raw.githubusercontent.com/lyymuwu/TokTrans/main/scripts/bootstrap.sh | bash
 ```
 
 Then open a new shell or run:
@@ -58,14 +60,14 @@ Full install sets up both:
 Wrapper-only install:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lyymuwu/codex-token-saver/main/scripts/bootstrap.sh | bash -s -- --no-skill
+curl -fsSL https://raw.githubusercontent.com/lyymuwu/TokTrans/main/scripts/bootstrap.sh | bash -s -- --no-skill
 ```
 
 Inspect-first install:
 
 ```bash
-git clone https://github.com/lyymuwu/codex-token-saver.git
-cd codex-token-saver
+git clone https://github.com/lyymuwu/TokTrans.git
+cd TokTrans
 ./scripts/install.sh
 ```
 
@@ -96,10 +98,10 @@ If you want `codex` itself to mean `codex-ts`, opt in explicitly:
 
 ## Use The Skill
 
-Use `$token-trans` first when you are already inside Codex and want a specific non-English task to go through cheap translation subagents:
+Use `$token-trans` first when you are already inside Codex and want a specific task to go through translation subagents:
 
 ```text
-$token-trans 帮我检查Server.md中的A100_1中几个/data, /data2, /data2_remote几个盘分别挂载到哪里的，是本地设备还是远程其他服务器上的
+$token-trans 帮我检查 Server.md 中 A100_1 的 /data、/data2、/data2_remote 分别挂载到哪里
 ```
 
 Use the bare form above. Avoid Markdown-link activation such as:
@@ -108,50 +110,42 @@ Use the bare form above. Avoid Markdown-link activation such as:
 [$token-trans](/path/to/SKILL.md) ...
 ```
 
-The skill is intentionally explicit opt-in. Short chats and ordinary translation requests should not pay the extra subagent overhead.
+The skill is intentionally explicit opt-in. Use it when you want a Codex task to pass through the TokTrans translation layer.
 
 ## How It Works
 
 ```text
-non-English task
+user task
       |
       v
-cheap translator -> English task
+translator -> Codex-ready task
       |
       v
-main Codex work in English
+main Codex work
       |
       v
-cheap translator -> final answer in original language
+translator -> final answer in the user's language
 ```
 
-For the skill path, intermediate work and progress stay in English. Only the final response is translated back.
+For the skill path, intermediate work and progress stay in the main agent's working language. Only the final response is translated back.
 
-## Why This Is Interesting
+## Why This Exists
 
-Many tokenizers spend more visible tokens on Chinese, Japanese, Thai, Hindi, Arabic, and other non-English prompts than on equivalent English prompts. More importantly, many coding, ops, and research tasks have stronger model coverage in English.
+Codex tasks often contain a mix of natural language, code, paths, logs, stack traces, and structured data. TokTrans focuses on translating only the natural-language parts around that workflow while preserving the technical tokens that should stay stable.
 
-This project exploits that asymmetry without forcing users to write English. The expensive model receives a cleaner English task; the user still gets the final answer in their language.
+This repository is intentionally narrow: it provides a translation adapter for Codex skills and CLI automation. Any token-count reduction is a possible side effect of translation, not the main product claim.
 
-It is not magic. Hidden reasoning tokens are not visible to the wrapper, translation adds latency, and one-line prompts may cost more than they save. The target use case is long, technical, non-English work: debugging, code review, server ops, experiment planning, research notes, and refactors.
+It is not magic. Translation adds latency, may fail, and may be unnecessary for short or code-heavy prompts. The target use case is technical multilingual work where the user wants a consistent translation boundary around Codex.
 
-## Evidence
+## Scope
 
-The claim is not that English always wins. The practical claim is narrower: for many current LLM workflows, translating a non-English task into English before the expensive reasoning step is a strong default to test.
-
-| Source | Reported finding | Why it matters here |
-|---|---|---|
-| [Etxaniz et al., “Do Multilingual Language Models Think Better in English?”, NAACL 2024](https://aclanthology.org/2024.naacl-short.46/) | Their self-translate method consistently outperforms direct non-English inference across 5 multilingual tasks. | Supports the core `$token-trans` idea: use a cheap translation boundary, then let the main model solve the task in English. |
-| [Ahuja et al., “MEGAVERSE: Benchmarking Large Language Models Across Languages, Modalities, Models and Tasks”, NAACL 2024](https://aclanthology.org/2024.naacl-long.143/) | Benchmarks LLMs across 22 datasets and 83 languages, highlighting non-English capability gaps, especially for lower-resource languages. | Treats multilingual parity as an empirical question, not an assumption; English-centered workflows can still be a useful fallback. |
-| [Petrov et al., “Language Model Tokenizers Introduce Unfairness Between Languages”, NeurIPS 2023](https://proceedings.neurips.cc/paper_files/paper/2023/hash/74bb24dca8334adce292883b4b651eda-Abstract-Conference.html) | The same text translated into different languages can have drastically different tokenization lengths, with reported differences up to 15x. | Supports the cost/context-pressure side of Token Saver: language choice can affect visible prompt length before reasoning even starts. |
-
-Operational takeaway:
+Operational guidance:
 
 | Prompt type | Recommended path | Reason |
 |---|---|---|
-| Long non-English coding/research task inside Codex | `$token-trans ...` | Native skill, cheap translation subagents, main work in English, final answer back. |
-| Terminal automation or CI-style `codex exec` | `codex-ts exec "..."` | Wrapper captures final output and can report visible-token estimates. |
-| Short one-line chat | Plain Codex | Two translation calls may cost more than they save. |
+| Multilingual coding/research task inside Codex | `$token-trans ...` | Native skill, explicit translation boundary, final answer back. |
+| Terminal automation or CI-style `codex exec` | `codex-ts exec "..."` | Wrapper captures final output and can translate it back. |
+| Short one-line chat | Plain Codex | A translation layer may add unnecessary overhead. |
 | Code-heavy prompt with little natural language | Plain Codex or wrapper auto-pass-through | Code, paths, and logs are already mostly language-neutral. |
 
 ## Safety Model
@@ -168,7 +162,7 @@ Operational takeaway:
 Default wrapper config lives at:
 
 ```text
-~/.codex-token-saver/config.toml
+~/.toktrans/config.toml
 ```
 
 Default values:
@@ -220,26 +214,26 @@ The wrapper prints visible-token estimates for translated `codex exec` prompts, 
 codex-ts: estimated prompt tokens 120 -> 78 (-42); language=Chinese; elapsed=12.4s
 ```
 
-Visible-token estimates are heuristic. They do not measure hidden reasoning tokens or backend billing internals. See [docs/benchmark.md](docs/benchmark.md) for benchmark snapshots.
+Visible-token estimates are heuristic. They are shown only as debugging information for wrapper runs and are not the primary purpose of TokTrans.
 
 ## Uninstall
 
 Preview:
 
 ```bash
-~/.codex-token-saver/scripts/uninstall.sh --dry-run
+~/.toktrans/scripts/uninstall.sh --dry-run
 ```
 
 Remove managed files:
 
 ```bash
-~/.codex-token-saver/scripts/uninstall.sh
+~/.toktrans/scripts/uninstall.sh
 ```
 
 Purge the plugin home too:
 
 ```bash
-~/.codex-token-saver/scripts/uninstall.sh --purge --yes
+~/.toktrans/scripts/uninstall.sh --purge --yes
 ```
 
 The uninstaller removes only manifest-managed files. It preserves config and logs unless `--purge --yes` is used.

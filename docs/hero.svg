@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 360" role="img" aria-labelledby="title desc">
-  <title id="title">Codex Token Saver workflow</title>
+  <title id="title">TokTrans workflow</title>
   <desc id="desc">A pixel-style diagram showing multilingual prompts translated to English before Codex and final answers translated back.</desc>
   <defs>
     <marker id="arrow-blue" markerWidth="10" markerHeight="8" refX="8.6" refY="4" orient="auto">
@@ -16,7 +16,7 @@
   <rect width="920" height="360" fill="#F7FAFC" rx="18"/>
   <rect x="24" y="22" width="872" height="316" fill="#FFFFFF" stroke="#D7E0EA" stroke-width="2" rx="14" filter="url(#soft-shadow)"/>
 
-  <text x="460" y="58" text-anchor="middle" font-family="monospace" font-size="26" font-weight="700" fill="#102033">Codex Token Saver</text>
+  <text x="460" y="58" text-anchor="middle" font-family="monospace" font-size="26" font-weight="700" fill="#102033">TokTrans</text>
   <text x="460" y="85" text-anchor="middle" font-family="monospace" font-size="14" fill="#526071">Any language in. English for Codex. Same language out.</text>
 
   <g transform="translate(70 128)">
@@ -27,7 +27,7 @@
   </g>
 
   <line x1="292" y1="174" x2="382" y2="174" stroke="#2F80ED" stroke-width="4" marker-end="url(#arrow-blue)"/>
-  <text x="337" y="151" text-anchor="middle" font-family="monospace" font-size="12" fill="#2F80ED">cheap model</text>
+  <text x="337" y="151" text-anchor="middle" font-family="monospace" font-size="12" fill="#2F80ED">translator</text>
 
   <g transform="translate(394 118)">
     <rect x="0" y="0" width="132" height="112" fill="#FFF7E8" stroke="#D98B24" stroke-width="2" rx="10"/>

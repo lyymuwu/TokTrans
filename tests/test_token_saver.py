@@ -236,19 +236,19 @@ class InstallerTests(unittest.TestCase):
             self.assertTrue((skill / "SKILL.md").exists())
             self.assertTrue((skill / "agents" / "openai.yaml").exists())
             rc_text = rcfile.read_text(encoding="utf-8")
-            self.assertIn("codex-token-saver managed block", rc_text)
+            self.assertIn("toktrans managed block", rc_text)
             self.assertIn(str(bindir), rc_text)
             dry = self.run_script("uninstall.sh", "--dry-run", env=env)
             self.assertEqual(dry.returncode, 0, dry.stderr)
             self.assertTrue((bindir / "codex-ts").exists())
             self.assertTrue((skill / "SKILL.md").exists())
-            self.assertIn("codex-token-saver managed block", rcfile.read_text(encoding="utf-8"))
+            self.assertIn("toktrans managed block", rcfile.read_text(encoding="utf-8"))
             uninstall = self.run_script("uninstall.sh", env=env)
             self.assertEqual(uninstall.returncode, 0, uninstall.stderr)
             self.assertFalse((bindir / "codex-ts").exists())
             self.assertFalse((skill / "SKILL.md").exists())
             self.assertTrue((home / "config.toml").exists())
-            self.assertNotIn("codex-token-saver managed block", rcfile.read_text(encoding="utf-8"))
+            self.assertNotIn("toktrans managed block", rcfile.read_text(encoding="utf-8"))
 
     def test_install_refuses_unmanaged_shim(self):
         with tempfile.TemporaryDirectory() as d:

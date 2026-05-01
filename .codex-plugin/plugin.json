@@ -1,39 +1,39 @@
 {
-  "name": "codex-token-saver",
+  "name": "toktrans",
   "version": "0.2.0",
-  "description": "Translate non-English Codex work into English through either a CLI wrapper or an explicit Codex skill.",
+  "description": "Translate Codex task text through either a CLI wrapper or an explicit Codex skill.",
   "author": {
-    "name": "Codex Token Saver Contributors"
+    "name": "TokTrans Contributors"
   },
-  "homepage": "https://github.com/lyymuwu/codex-token-saver",
-  "repository": "https://github.com/lyymuwu/codex-token-saver",
+  "homepage": "https://github.com/lyymuwu/TokTrans",
+  "repository": "https://github.com/lyymuwu/TokTrans",
   "license": "MIT",
   "keywords": [
     "codex",
     "cli",
     "translation",
-    "token-saving",
+    "toktrans",
     "multilingual"
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Codex Token Saver",
-    "shortDescription": "Translate multilingual prompts to reduce Codex token use",
-    "longDescription": "A safe Codex CLI wrapper plus an explicit $token-trans skill. Both translate non-English tasks to English, let Codex work in English, and translate only the final answer back.",
-    "developerName": "Codex Token Saver Contributors",
+    "displayName": "TokTrans",
+    "shortDescription": "Translate multilingual Codex task text",
+    "longDescription": "A safe Codex CLI wrapper plus an explicit $token-trans skill. Both provide a translation boundary around Codex tasks without patching the official Codex binary.",
+    "developerName": "TokTrans Contributors",
     "category": "Productivity",
     "capabilities": [
       "Interactive",
       "Read"
     ],
-    "websiteURL": "https://github.com/lyymuwu/codex-token-saver",
-    "privacyPolicyURL": "https://github.com/lyymuwu/codex-token-saver#privacy-and-safety",
-    "termsOfServiceURL": "https://github.com/lyymuwu/codex-token-saver#license",
+    "websiteURL": "https://github.com/lyymuwu/TokTrans",
+    "privacyPolicyURL": "https://github.com/lyymuwu/TokTrans#privacy-and-safety",
+    "termsOfServiceURL": "https://github.com/lyymuwu/TokTrans#license",
     "defaultPrompt": [
       "Run Codex with translated multilingual prompts",
       "Use $token-trans for a non-English task",
-      "Estimate token savings for a multilingual prompt",
-      "Check whether Token Saver is configured"
+      "Translate a multilingual Codex prompt",
+      "Check whether TokTrans is configured"
     ],
     "brandColor": "#0F766E",
     "screenshots": []

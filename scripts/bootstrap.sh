@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="${CODEX_TOKEN_SAVER_REPO_URL:-https://github.com/lyymuwu/codex-token-saver.git}"
-REF="${CODEX_TOKEN_SAVER_REF:-main}"
+REPO_URL="${TOKTRANS_REPO_URL:-${CODEX_TOKEN_SAVER_REPO_URL:-https://github.com/lyymuwu/TokTrans.git}}"
+REF="${TOKTRANS_REF:-${CODEX_TOKEN_SAVER_REF:-main}}"
 
 usage() {
   cat <<'USAGE'
-Usage: curl -fsSL https://raw.githubusercontent.com/lyymuwu/codex-token-saver/main/scripts/bootstrap.sh | bash
+Usage: curl -fsSL https://raw.githubusercontent.com/lyymuwu/TokTrans/main/scripts/bootstrap.sh | bash
 
 Environment:
-  CODEX_TOKEN_SAVER_REPO_URL  Override repository URL.
-  CODEX_TOKEN_SAVER_REF       Git branch/tag/commit to install. Default: main.
+  TOKTRANS_REPO_URL  Override repository URL.
+  TOKTRANS_REF       Git branch/tag/commit to install. Default: main.
 
 Extra arguments are passed to scripts/install.sh:
   bash bootstrap.sh --alias
@@ -33,16 +33,16 @@ need() {
 need git
 need bash
 
-tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/codex-token-saver.XXXXXX")"
+tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/toktrans.XXXXXX")"
 cleanup() {
   rm -rf "$tmpdir"
 }
 trap cleanup EXIT
 
-echo "Downloading Codex Token Saver from $REPO_URL ($REF)"
-git clone --depth 1 --branch "$REF" "$REPO_URL" "$tmpdir/codex-token-saver"
+echo "Downloading TokTrans from $REPO_URL ($REF)"
+git clone --depth 1 --branch "$REF" "$REPO_URL" "$tmpdir/TokTrans"
 
-cd "$tmpdir/codex-token-saver"
+cd "$tmpdir/TokTrans"
 echo "Running installer..."
 bash ./scripts/install.sh "$@"
 

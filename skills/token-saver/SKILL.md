@@ -1,11 +1,11 @@
 ---
 name: token-saver
-description: Use Codex Token Saver when a user wants Codex CLI prompts translated through a cheap model to reduce token cost, or wants to install, configure, diagnose, or uninstall the codex-ts wrapper.
+description: Use TokTrans when a user wants Codex CLI prompts translated through a translation adapter, or wants to install, configure, diagnose, or uninstall the codex-ts wrapper.
 ---
 
-# Codex Token Saver
+# TokTrans
 
-Codex Token Saver provides a local wrapper command, `codex-ts`, that keeps the official `codex` installation untouched.
+TokTrans provides a local wrapper command, `codex-ts`, that keeps the official `codex` installation untouched.
 
 Use it when:
 

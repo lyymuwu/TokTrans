@@ -1,13 +1,13 @@
 ---
 name: token-trans
-description: "Explicit opt-in only. Translate non-English requests to English via cheap subagents, work in English, translate only the final answer back."
+description: "Explicit opt-in only. Translate multilingual requests through lightweight subagents, work normally, translate only the final answer back."
 ---
 
 # Token Trans
 
 ## Protocol
 
-Run only on explicit `$token-trans` or cheap-subagent/token-saving requests. Invoke as bare `$token-trans ...`; translate back only the final answer.
+Run only on explicit `$token-trans` or TokTrans requests. Invoke as bare `$token-trans ...`; translate back only the final answer.
 
 1. Inbound: if non-English, spawn the cheapest subagent, preferably `gpt-5.4-mini`, `reasoning_effort: "low"`, `fork_context: false`, no extra system/context.
 

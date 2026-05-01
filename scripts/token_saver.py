@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Codex Token Saver.
+"""TokTrans.
 
 This module intentionally uses only the Python standard library so the wrapper
 can be installed from a Git checkout without dependency bootstrapping.
@@ -74,7 +74,7 @@ class Detection:
 
 
 def plugin_home() -> Path:
-    return Path(os.environ.get("CODEX_TOKEN_SAVER_HOME", "~/.codex-token-saver")).expanduser()
+    return Path(os.environ.get("TOKTRANS_HOME", os.environ.get("CODEX_TOKEN_SAVER_HOME", "~/.toktrans"))).expanduser()
 
 
 def repo_root() -> Path:
@@ -82,7 +82,7 @@ def repo_root() -> Path:
 
 
 def config_path() -> Path:
-    return Path(os.environ.get("CODEX_TOKEN_SAVER_CONFIG", str(plugin_home() / "config.toml"))).expanduser()
+    return Path(os.environ.get("TOKTRANS_CONFIG", os.environ.get("CODEX_TOKEN_SAVER_CONFIG", str(plugin_home() / "config.toml")))).expanduser()
 
 
 def load_config(path: Path | None = None) -> dict:
@@ -281,7 +281,7 @@ def openai_chat(messages: list[dict], cfg: dict) -> str:
 def codex_cli_chat(messages: list[dict], cfg: dict) -> str:
     codex = find_real_codex()
     prompt_parts = [
-        "You are a translation engine used by Codex Token Saver.",
+        "You are a translation engine used by TokTrans.",
         "Follow the system and user instructions below. Return only the requested translation.",
         "",
     ]
@@ -353,12 +353,12 @@ def translate_from_english(text: str, target_language: str, cfg: dict) -> str:
 
 
 def find_real_codex(self_path: Path | None = None) -> str:
-    env_path = os.environ.get("CODEX_TOKEN_SAVER_REAL_CODEX")
+    env_path = os.environ.get("TOKTRANS_REAL_CODEX", os.environ.get("CODEX_TOKEN_SAVER_REAL_CODEX"))
     if env_path:
         p = Path(env_path).expanduser()
         if p.exists() and os.access(p, os.X_OK):
             return str(p)
-        raise RuntimeError(f"CODEX_TOKEN_SAVER_REAL_CODEX is not executable: {p}")
+        raise RuntimeError(f"TOKTRANS_REAL_CODEX is not executable: {p}")
 
     self_path = (self_path or Path(sys.argv[0])).resolve()
     candidates: list[Path] = []
@@ -385,7 +385,7 @@ def find_real_codex(self_path: Path | None = None) -> str:
     for p in common:
         if p.exists() and os.access(p, os.X_OK):
             return str(p)
-    raise RuntimeError("could not find real codex; set CODEX_TOKEN_SAVER_REAL_CODEX")
+    raise RuntimeError("could not find real codex; set TOKTRANS_REAL_CODEX")
 
 
 def is_passthrough(args: Sequence[str]) -> bool:

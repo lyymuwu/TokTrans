@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT="$(unset CDPATH; cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-PLUGIN_HOME="${CODEX_TOKEN_SAVER_HOME:-$HOME/.codex-token-saver}"
-BIN_DIR="${CODEX_TOKEN_SAVER_BIN_DIR:-$HOME/.local/bin}"
+PLUGIN_HOME="${TOKTRANS_HOME:-${CODEX_TOKEN_SAVER_HOME:-$HOME/.toktrans}}"
+BIN_DIR="${TOKTRANS_BIN_DIR:-${CODEX_TOKEN_SAVER_BIN_DIR:-$HOME/.local/bin}}"
 SHIM="$BIN_DIR/codex-ts"
 MANIFEST="$PLUGIN_HOME/install-manifest.json"
 INSTALL_ALIAS=0
@@ -18,14 +18,14 @@ usage() {
   cat <<'USAGE'
 Usage: scripts/install.sh [--skill-only] [--alias] [--no-path] [--no-skill] [--home PATH] [--bin-dir PATH]
 
-Installs Codex Token Saver without modifying the official Codex CLI.
+Installs TokTrans without modifying the official Codex CLI.
 
 Options:
   --skill-only   Install only the $token-trans Codex skill.
   --alias        Add a clearly marked alias block to the shell rc file.
   --no-path      Do not add the codex-ts bin directory to the shell rc file.
   --no-skill     Do not install the $token-trans Codex skill.
-  --home PATH    Install managed files under PATH instead of ~/.codex-token-saver.
+  --home PATH    Install managed files under PATH instead of ~/.toktrans.
   --bin-dir PATH Create the codex-ts shim in PATH instead of ~/.local/bin.
 USAGE
 }
@@ -105,7 +105,7 @@ if [ "$INSTALL_WRAPPER" -eq 1 ]; then
 
   if ! grep -Fq 'detect_latin_languages' "$PLUGIN_HOME/config.toml"; then
     {
-      printf '\n# Added by Codex Token Saver upgrade: enable auto-detection for Latin-script non-English prompts.\n'
+      printf '\n# Added by TokTrans upgrade: enable auto-detection for Latin-script non-English prompts.\n'
       printf 'detect_latin_languages = true\n'
     } >> "$PLUGIN_HOME/config.toml"
   fi
@@ -115,8 +115,8 @@ fi
 
 rc_block_written=false
 if [ "$INSTALL_PATH" -eq 1 ] || [ "$INSTALL_ALIAS" -eq 1 ]; then
-  begin="# >>> codex-token-saver managed block >>>"
-  end="# <<< codex-token-saver managed block <<<"
+  begin="# >>> toktrans managed block >>>"
+  end="# <<< toktrans managed block <<<"
   touch "$RC_FILE"
   if grep -Fq "$begin" "$RC_FILE"; then
     rc_block_written=true
@@ -166,7 +166,7 @@ if install_skill == "1":
     ])
     codex_skill_targets.append(token_trans_skill_dir)
 data = {
-    "tool": "codex-token-saver",
+    "tool": "toktrans",
     "version": "0.2.0",
     "installed_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     "plugin_home": home,
@@ -205,7 +205,7 @@ else
 fi
 
 cat <<EOF
-Codex Token Saver installed.
+TokTrans installed.
 
 Command:
   $command_summary
