@@ -37,13 +37,18 @@ Tokenizer behavior is not language-neutral. Aran Komatsuzaki's tokenizer experim
 
 Source: [Aran Komatsuzaki on X](https://x.com/arankomatsuzaki/status/2049177688402022730), with an accessible summary in [TestingCatalog](https://testingcatalog.net/claudes-65-token-premium-for-chinese-is-a-hard-lesson-in-tokenizer-bias/).
 
-Quality is affected too. [CodeMixBench](https://arxiv.org/abs/2505.05063) (2025) evaluates code generation on English-only prompts versus controlled code-mixed prompts built from BigCodeBench. The paper reports that code-mixed prompts consistently reduce Pass@1 performance compared with the original English prompts, especially as the code-mixing degree increases.
+Quality is affected too. [CodeMixBench](https://arxiv.org/abs/2505.05063) (2025) evaluates code generation on English-only prompts versus controlled code-mixed prompts built from BigCodeBench. In the figure below, the red dashed line is the original English prompt baseline, while the blue and green lines are code-mixed prompts. Most blue/green points sit below the red baseline, showing that mixed-language instructions often reduce Pass@1 even when the underlying programming task is the same.
 
 ![CodeMixBench Pass@1 comparison across English and code-mixed prompts](docs/codemixbench-pass1.png)
 
 Figure source: CodeMixBench, Figure 1.
 
-[When Models Reason in Your Language](https://arxiv.org/abs/2505.22888) (EMNLP Findings 2025) studies large reasoning models on multilingual math and science questions. Its Figure 2 shows a sharp trade-off: stronger language-control prompting increases thinking-language matching, but average answer accuracy drops from 26% to 17%; the authors also observe that reasoning in English gives higher accuracy even for non-English queries.
+[When Models Reason in Your Language](https://arxiv.org/abs/2505.22888) (EMNLP Findings 2025) studies large reasoning models on multilingual math and science questions. The figure below has two stories:
+
+- The top row measures whether the model's hidden thinking trace matches the requested language. Stronger language-control prompting raises the average matching rate from 46% to 98%.
+- The bottom row measures answer accuracy on the same setting. That stronger language control drops average accuracy from 26% to 17%.
+
+This is the trade-off TokTrans is designed around: forcing the model to reason in the user's language can make the trace more readable, but it can also make the answer worse. TokTrans instead takes the pragmatic path: translate the task into a Codex-ready form, preserve technical tokens, let the model work in its stronger reasoning regime, then translate only the final answer back.
 
 ![Language matching and answer accuracy trade-off from When Models Reason in Your Language](docs/reasoning-language-accuracy.png)
 
