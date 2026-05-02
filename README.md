@@ -3,15 +3,20 @@
 [![CI](https://github.com/lyymuwu/TokTrans/actions/workflows/ci.yml/badge.svg)](https://github.com/lyymuwu/TokTrans/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Codex CLI](https://img.shields.io/badge/Codex-CLI-111827)](https://github.com/openai/codex)
+[![Claude Code](https://img.shields.io/badge/Claude-Code-CC785C)](https://docs.claude.com/en/docs/claude-code/overview)
 
 <p align="center">
-  <strong>When Codex feels weaker outside English, it may not be your prompt. It may be the language boundary.</strong>
+  <strong>When your coding agent feels weaker outside English, it may not be your prompt. It may be the language boundary.</strong>
+</p>
+
+<p align="center">
+  <em>TokTrans ships skills for the two main platforms — <strong>Codex</strong> and <strong>Claude Code</strong>. Pick the one that matches your tool.</em>
 </p>
 
 <table>
   <tr>
     <td width="50%">
-      <h3>Codex feels less sharp?</h3>
+      <h3>The agent feels less sharp?</h3>
       <p>Same repo, same bug, same intent, but the answer misses context or needs more back-and-forth when the task is not written in English.</p>
     </td>
     <td width="50%">
@@ -21,9 +26,9 @@
   </tr>
 </table>
 
-TokTrans adds an explicit translation boundary around Codex. It translates the user-facing text that enters or leaves a Codex run while preserving code, paths, logs, commands, stack traces, JSON/YAML/TOML, and quoted literals.
+TokTrans adds an explicit translation boundary around your coding agent. It translates the user-facing text that enters or leaves an agent run while preserving code, paths, logs, commands, stack traces, JSON/YAML/TOML, and quoted literals.
 
-It does not replace Codex, patch the official `codex` binary, or force you to work in English. You keep writing in your language; Codex gets a cleaner task; the final answer comes back in your language.
+It does not replace the agent, patch any official binary, or force you to work in English. You keep writing in your language; the agent gets a cleaner task; the final answer comes back in your language. The same translation protocol is shipped as a skill for both **Codex** and **Claude Code**.
 
 ## Evidence
 
@@ -48,7 +53,7 @@ Figure source: CodeMixBench, Figure 1.
 - The top row measures whether the model's hidden thinking trace matches the requested language. Stronger language-control prompting raises the average matching rate from 46% to 98%.
 - The bottom row measures answer accuracy on the same setting. That stronger language control drops average accuracy from 26% to 17%.
 
-This is the trade-off TokTrans is designed around: forcing the model to reason in the user's language can make the trace more readable, but it can also make the answer worse. TokTrans instead takes the pragmatic path: translate the task into a Codex-ready form, preserve technical tokens, let the model work in its stronger reasoning regime, then translate only the final answer back.
+This is the trade-off TokTrans is designed around: forcing the model to reason in the user's language can make the trace more readable, but it can also make the answer worse. TokTrans instead takes the pragmatic path: translate the task into an agent-ready form, preserve technical tokens, let the model work in its stronger reasoning regime, then translate only the final answer back.
 
 ![Language matching and answer accuracy trade-off from When Models Reason in Your Language](docs/reasoning-language-accuracy.png)
 
@@ -58,15 +63,35 @@ TokTrans exists because multilingual technical work needs a practical translatio
 
 ## What You Get
 
-- `$token-trans`: an explicit Codex skill for in-app agent workflows.
-- `codex-ts`: a safe wrapper for terminal automation and `codex exec`.
+- `$token-trans` skill for **Codex** — explicit opt-in skill for in-app agent workflows.
+- `$token-trans` skill for **Claude Code** — same protocol, ported to Claude Code's native subagent system (`Task` + `model: haiku`).
+- `codex-ts`: a safe wrapper for terminal automation and `codex exec` (Codex only).
 - Technical-token preservation for code, paths, logs, stack traces, commands, and structured data.
 - Final-answer translation back into the user's language.
-- No patching or replacement of the official `codex` binary.
+- No patching or replacement of the official `codex` or `claude` binaries.
 
 ![TokTrans workflow](docs/hero.svg)
 
-## Quick Start
+## Pick Your Platform
+
+Both skills follow the same 3-step translation protocol — translate inbound, work in English, translate outbound — and use a cheap subagent on each end with no repository or secret context. Choose the one that matches your tool:
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>Codex</h3>
+      <p>Skill installs to <code>~/.codex/skills/token-trans/</code> and uses the cheapest Codex subagent (e.g. <code>gpt-5.4-mini</code>) for translations. Optional <code>codex-ts</code> CLI wrapper available.</p>
+      <p>Skill source: <code>skills/token-trans/SKILL.md</code></p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>Claude Code</h3>
+      <p>Skill installs to <code>~/.claude/skills/token-trans/</code> and uses Claude Code's <code>Task</code> tool with <code>model: "haiku"</code> for translations. No CLI wrapper needed.</p>
+      <p>Skill source: <code>skills/claude-code/token-trans/SKILL.md</code></p>
+    </td>
+  </tr>
+</table>
+
+## Quick Start — Codex
 
 Install only the native Codex skill:
 
@@ -82,9 +107,33 @@ $token-trans 帮我检查这个项目为什么测试失败
 
 The skill path is explicit, lightweight, and does not wrap `codex` or modify your shell PATH.
 
-## Optional CLI Wrapper
+## Quick Start — Claude Code
 
-Install the skill plus `codex-ts`:
+Clone the repo and install the Claude Code skill into `~/.claude/skills/token-trans/`:
+
+```bash
+git clone https://github.com/lyymuwu/TokTrans.git
+cd TokTrans
+bash scripts/install-claude-code.sh
+```
+
+Use it inside Claude Code:
+
+```text
+$token-trans 帮我检查这个项目为什么测试失败
+```
+
+Claude Code matches the skill on `$token-trans`, then spawns short-lived `Task` subagents on `model: haiku` to translate the request to English and the final answer back. Main work happens on your normal Claude Code model in English.
+
+To uninstall, just remove the skill folder:
+
+```bash
+rm -rf ~/.claude/skills/token-trans
+```
+
+## Optional Codex CLI Wrapper
+
+Install the Codex skill plus `codex-ts`:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/lyymuwu/TokTrans/main/scripts/bootstrap.sh | bash
@@ -124,23 +173,26 @@ curl -fsSL https://raw.githubusercontent.com/lyymuwu/TokTrans/main/scripts/boots
 ```text
 user task
   -> translator preserves technical tokens
-  -> Codex-ready task
-  -> main Codex work
+  -> agent-ready task in English
+  -> main agent work (Codex or Claude Code)
   -> final answer translated back
 ```
 
-Use TokTrans for multilingual coding, debugging, research, and ops tasks where natural-language instructions matter. Use plain Codex for short one-line chats or prompts that are mostly code, paths, and logs.
+Use TokTrans for multilingual coding, debugging, research, and ops tasks where natural-language instructions matter. Use the plain agent for short one-line chats or prompts that are mostly code, paths, and logs.
 
 ## Safety
 
-- The official `codex` binary is never patched or replaced.
-- `codex-ts` is a separate wrapper command.
-- `$token-trans` uses `fork_context: false` for translator subagents.
+- The official `codex` and `claude` binaries are never patched or replaced.
+- `codex-ts` is a separate wrapper command (Codex only).
+- The Codex `$token-trans` skill uses `fork_context: false` for translator subagents.
+- The Claude Code `$token-trans` skill spawns fresh `Task` subagents on `model: haiku` with no inherited context.
 - Translation prompts preserve code blocks, inline code, commands, paths, API names, filenames, JSON/YAML/TOML, stack traces, and quoted literals.
 - Translator subagents must not receive repository history, files, credentials, API keys, or unrelated context.
 - If translation fails, the wrapper falls back to raw Codex and the skill continues without TokTrans.
 
 ## Configuration
+
+Configuration applies to the optional Codex CLI wrapper (`codex-ts`). The Codex skill (`~/.codex/skills/token-trans/SKILL.md`) and the Claude Code skill (`~/.claude/skills/token-trans/SKILL.md`) are stateless markdown files and have no separate config.
 
 Default wrapper config:
 
@@ -183,14 +235,26 @@ api_key_env = "OPENAI_API_KEY"
 
 ## Verify
 
+For the Codex CLI wrapper and Codex skill:
+
 ```bash
 codex-ts doctor
 python3 -m unittest discover -s tests
 ```
 
+For the Claude Code skill:
+
+```bash
+test -f ~/.claude/skills/token-trans/SKILL.md && echo "Claude Code skill: installed"
+```
+
+Inside Claude Code, type `$token-trans hello` (or your non-English equivalent) to confirm the skill activates and the protocol runs.
+
 Visible-token estimates are heuristic and shown only as debugging information for wrapper runs.
 
 ## Uninstall
+
+Codex skill and `codex-ts` wrapper:
 
 ```bash
 ~/.toktrans/scripts/uninstall.sh --dry-run
@@ -199,6 +263,12 @@ Visible-token estimates are heuristic and shown only as debugging information fo
 ```
 
 The uninstaller removes only manifest-managed files. It preserves config and logs unless `--purge --yes` is used.
+
+Claude Code skill:
+
+```bash
+rm -rf ~/.claude/skills/token-trans
+```
 
 ## Development
 
