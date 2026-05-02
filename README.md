@@ -6,11 +6,11 @@
 [![Claude Code](https://img.shields.io/badge/Claude-Code-CC785C)](https://docs.claude.com/en/docs/claude-code/overview)
 
 <p align="center">
-  <strong>When your coding agent feels weaker outside English, it may not be your prompt. It may be the language boundary.</strong>
+  <strong>When your coding agent feels weaker outside English, it may not be your prompt. It may be the language.</strong>
 </p>
 
 <p align="center">
-  <em>TokTrans ships skills for the two main platforms — <strong>Codex</strong> and <strong>Claude Code</strong>. Pick the one that matches your tool.</em>
+  <em>TokTrans ships native skills for <strong>Codex</strong> and <strong>Claude Code</strong>. Pick the one that matches your workflow.</em>
 </p>
 
 <table>
@@ -26,9 +26,13 @@
   </tr>
 </table>
 
-TokTrans adds an explicit translation boundary around your coding agent. It translates the user-facing text that enters or leaves an agent run while preserving code, paths, logs, commands, stack traces, JSON/YAML/TOML, and quoted literals.
+TokTrans adds an explicit translation layer for your coding agent. It translates the user-facing text that enters or leaves an agent run while preserving code, paths, logs, commands, stack traces, JSON/YAML/TOML, and quoted literals.
 
 It does not replace the agent, patch any official binary, or force you to work in English. You keep writing in your language; the agent gets a cleaner task; the final answer comes back in your language. The same translation protocol is shipped as a skill for both **Codex** and **Claude Code**.
+
+<p align="center">
+  <strong>Try it on one real multilingual debugging task. If it saves you a round trip, a star helps more developers find it.</strong>
+</p>
 
 ## Evidence
 
@@ -59,7 +63,7 @@ This is the trade-off TokTrans is designed around: forcing the model to reason i
 
 Figure source: When Models Reason in Your Language, Figure 2.
 
-TokTrans exists because multilingual technical work needs a practical translation boundary, not because every task should be translated. The impact depends on the model, tokenizer, language, and task.
+TokTrans exists because multilingual technical work needs a practical translation layer, not because every task should be translated. The impact depends on the model, tokenizer, language, and task.
 
 ## What You Get
 
@@ -74,7 +78,7 @@ TokTrans exists because multilingual technical work needs a practical translatio
 
 ## Pick Your Platform
 
-Both skills follow the same 3-step translation protocol — translate inbound, work in English, translate outbound — and use a cheap subagent on each end with no repository or secret context. Choose the one that matches your tool:
+Both skills follow the same 3-step translation protocol — translate inbound, work in English, translate outbound — and use a low-cost translator subagent on each end with no repository or secret context. Choose the one that matches your tool:
 
 <table>
   <tr>
